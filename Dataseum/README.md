@@ -4,11 +4,7 @@ Hosted in Price Gilbert Library, April 2024.
 
 Spring 2024 CS 7470 Project
 
-### 1. documentation/
-
-- project documentation
-
-### 2. webapp/
+webapp/
 
 - directories and files for becoming the data web application
 
