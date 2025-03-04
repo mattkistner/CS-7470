@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GT Dataseum</title>
+        <%- include('../includes/head'); %>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="/css/data.css">
+        <script src="/js/firebase.js"></script>
+
+    </head>
+
+    <body>
+        <div class="logo">
+            <img src="/img/transparent_logo.svg" alt="Logo">
+        </div>
+        <div id="content" class="center full">
+            <h1>Visitor Data</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SessionID</th>
+                        <th>Nickname</th>
+                        <th>Active</th>
+                        <th>End Time</th>
+                        <th>Start Time</th>
+                        <th>Score</th>
+                        <th>Stations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% visitors.forEach(visitor => { %>
+                        <tr>
+                            <td><%= visitor.sessionid %></td>
+                            <td><%= visitor.name %></td>
+                            <td><%= visitor.active %></td>
+                            <td><%= visitor.endtime.toDate().toLocaleString() %></td>
+                            <td><%= visitor.starttime.toDate().toLocaleString() %></td>
+                            <td><%= visitor.score %></td>
+                            <td><%= visitor.stations.join(', ') %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            async function displayVisitors() {
+                const response = await fetch('/data');
+                const data = await response.json();
+                console.log(data); // Log the visitor data to console
+            }
+            displayVisitors();
+        </script>
+    </body>
+</html>

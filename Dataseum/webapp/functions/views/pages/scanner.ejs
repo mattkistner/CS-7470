@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Find your Experience. | GT Dataseum</title>
+        <%- include('../includes/head'); %>
+        <link rel="stylesheet" type="text/css" media="screen" href="/css/data.css">
+        <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    </head>
+
+    <body>
+        <div id="content" class="center">
+            <div style="margin-top: 50px;"><%- include('../includes/dataseumtitle'); %></div>
+            <h1 class="title3" style="display: none;">Session: <%= sessionId %></h1><hr>
+
+            <h1 class="title1">Scan a QR code to continue.</h1>
+            <div id="message"></div>
+            <div id="scanner" width="600px"></div>
+            <a onclick="switchCamera()" class="button green" style="margin-bottom: 50px;">Switch Camera</a>
+        </div>
+
+        <script type="text/javascript">
+            let cameras = [];
+            let currentCameraIndex = 0;
+            let scannerRunning = false;
+            let html5QrCode = null;
+            //help
+
+            // This method will trigger user permissions
+            Html5Qrcode.getCameras().then(devices => {
+                cameras = devices;
+                if (cameras && cameras.length) {
+                    // Start with the first camera
+                    switchCamera();
+                }
+            }).catch(err => {
+                console.error(err);
+            });
+
+            function switchCamera() {
+                if (cameras.length === 0) {
+                    console.log('No cameras available.');
+                    return;
+                }
+
+                // Stop the previous camera if it's running
+                if (scannerRunning) {
+                    html5QrCode.stop();
+                    scannerRunning = false;
+                }
+
+                // Increment the camera index
+                currentCameraIndex = (currentCameraIndex + 1) % cameras.length;
+                //console.log(currentCameraIndex)
+                const cameraId = cameras[currentCameraIndex].id;
+
+                html5QrCode = new Html5Qrcode(/* element id */ "scanner");
+
+
+                html5QrCode.start(
+                    cameraId,
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    (decodedText, decodedResult) => {
+                        // Handle decoded text
+                        console.log(decodedText)
+                        if (isRecognizedUrl(decodedText)) {
+                            // stop scanning
+                            html5QrCode.stop().then((ignore) => {
+                            // QR Code scanning is stopped.
+                            }).catch((err) => {
+                            // Stop failed, handle it.
+                            });
+
+                            showMessage('Experience located. Loading...');
+                            console.log('Scanned URL:', decodedText);
+                            console.log('Confirmation: URL recognized.');
+                            console.log('Loading...');
+                            setTimeout(function () {
+                                window.location.href = decodedText;
+                            }, 100); // 0.1 seconds
+                        } else {
+                            console.log('Scanned content is not a recognized URL:', decodedText);
+                        }
+                    },
+                    (errorMessage) => {
+                        // Handle error
+                        //console.log(errorMessage)
+                    }
+                    ).then(() => {
+                        scannerRunning = true;
+                    }).catch((err) => {
+                    // Handle start error
+                    console.error(err);
+                });
+            }
+    
+            function isRecognizedUrl(content) {
+                const recognizedUrls = [
+                    'becoming-the-data.web.app',
+                ];
+                return recognizedUrls.some(url => content.includes(url));
+            }
+    
+            function showMessage(message) {
+                document.getElementById('message').innerHTML = message;
+            }
+    
+        </script>
+    </body>
+</html>

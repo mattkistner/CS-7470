@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GT Dataseum</title>
+        <%- include('../includes/head'); %>
+        <link rel="stylesheet" type="text/css" media="screen" href="/css/tile.css">
+    </head>
+
+    <body>
+        <div class="logo">
+            <img src="/img/transparent_logo.svg" alt="Logo">
+        </div>
+        <%- include('../includes/homepagetiles'); %>
+
+        <div id="content" class="center"  style="min-height: 50vh;">
+            <div id="titles">
+                <h1 id="pretitle" class="title1">Welcome To The</h1>
+                <%- include('../includes/dataseumtitle'); %>
+                <h1 id="subtitle" class="title3">A Place To Play With Data</h1>
+            </div>
+            <a href="/start" class="button orange" >I'm ready to Become The Data.</a>
+            <a href="/about" class="button blue">I want to learn more.</a>
+        </div>
+    </body>
+</html>
